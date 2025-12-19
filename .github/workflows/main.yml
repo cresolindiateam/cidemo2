@@ -28,7 +28,7 @@ jobs:
       - run: |
           git config user.name "nitesh"
           git config user.email "nitesh@cresol.in"
-          git remote set-url origin https://x-access-token:${{ secrets.MERATOKEN }}@github.com/houchiangliu/sigma.git
+          git remote set-url origin https://x-access-token:${{ secrets.MERATOKEN }}@github.com/cresolindiateam/cidemo2.git
           # Notes:
           # git remote add = add new remote if it doesn't exist
           # git remote set-url = update existing remote URL
