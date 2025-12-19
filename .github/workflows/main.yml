@@ -1,0 +1,44 @@
+name: Python CI/CD Workflow
+
+on:
+  push:
+    branches:
+      - master  # Trigger workflow on push to master branch
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest  # Use Ubuntu runner
+    steps:
+      # 1️⃣ Checkout code
+      - uses: actions/checkout@v2
+        with:
+          token: ${{ secrets.MERATOKEN }}  # GitHub secret token for authentication
+
+      # 2️⃣ Set up Python
+      - uses: actions/setup-python@v2
+        with:
+          python-version: 3.8  # Install Python 3.8
+
+      # 3️⃣ Install dependencies
+      - run: |
+          pip install --upgrade pip
+          pip install -r requirements.txt  # Install packages from requirements.txt
+
+      # 4️⃣ Configure Git with token
+      - run: |
+          git config user.name "nitesh"
+          git config user.email "nitesh@cresol.in"
+          git remote set-url origin https://x-access-token:${{ secrets.MERATOKEN }}@github.com/houchiangliu/sigma.git
+          # Notes:
+          # git remote add = add new remote if it doesn't exist
+          # git remote set-url = update existing remote URL
+          # x-access-token = placeholder username GitHub accepts for token authentication
+          # ${{ secrets.MERATOKEN }} = GitHub secret storing personal access token (PAT)
+          # This allows GitHub Actions to push without entering username/password manually
+
+      # 5️⃣ Push deployment branch
+      - run: |
+          git branch -D deployment1-branch || true   # -D = force delete local branch if exists, || true = ignore error if branch doesn't exist
+          git checkout -b deployment1-branch         # -b = create new branch and switch to it
+          git push -f origin deployment1-branch      # -f = force push to remote
+        shell: bash  # Run commands using Bash (Linux shell), otherwise Windows runner may use PowerShell
